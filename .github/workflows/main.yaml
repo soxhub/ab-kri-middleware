@@ -1,0 +1,46 @@
+# This is a basic build and deploy workflow for internal applications
+name: Build and Deploy
+env:
+  CF_API_KEY: ${{ secrets.CODEFRESH_API_TOKEN }}
+  CFVAR_HELM_CHART_NAME: <INSERT HELM CHART NAME>
+  CFVAR_HELM_CHART_VERSION: <INSERT HELM CHART VERSION>
+on: 
+  push:
+    branches-ignore:
+      - 'master'
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+  release:
+    types: [published]
+    branches:
+      - master
+jobs:
+  build:
+    if: github.ref != 'master' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Trigger internal apps build pipeline
+      uses: soxhub/codefresh-pipeline-runner@codefresh-run-variables
+      env:
+        PIPELINE_ID: '5e9b7165c2b7b02672c11e51'
+      id: build
+  deploy_dev:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.base_ref == 'master'
+    steps:
+    - name: Trigger internal apps deploy_dev pipeline
+      uses: soxhub/codefresh-pipeline-runner@codefresh-run-variables
+      env:
+        PIPELINE_ID: '5e9a680a580e7a3ed6b0de72'
+      id: deploy-dev
+  deploy_prod:  
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    steps:
+    - name: Trigger internal apps deploy_prod pipeline
+      uses: soxhub/codefresh-pipeline-runner@codefresh-run-variables
+      env:
+        PIPELINE_ID: '5ea22f1b746ba95da882ca1f'
+      id: deploy-prod
