@@ -1,0 +1,15 @@
+# osx
+.DS_Store
+
+# python
+*.pyc
+**/venv/
+
+# environment
+.envrc
+.vscode/
+
+# cache
+.mypy_cache/
+**/__pycache__/
+.pytest_cache

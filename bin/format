@@ -1,0 +1,12 @@
+#!/bin/bash
+
+
+black=$(which black)
+
+
+if [ -z $black ]; then
+    printf "black not found. are you in a virtual environment with dependencies installed?\n"
+    exit 1
+fi
+
+black test/*.py && black app/*.py
