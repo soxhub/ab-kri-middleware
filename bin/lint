@@ -1,0 +1,10 @@
+#!/bin/bash
+
+linter=$(which pylint)
+
+if [ -z $linter ]; then
+    printf "pylint not found. are you in a virtual environment with dependencies installed?\n"
+    exit 1
+fi
+
+$linter test/*.py && $linter app/*.py

@@ -1,0 +1,11 @@
+services:
+    galaxy:
+        name: galaxy_simple_fetcher_service
+        scheme: http
+        host: localhost
+        port: 9001
+        path: /api/v1/galaxy/stats
+        content_type: application/json
+        kri_id: 16
+        # endpoint_authentication_secret: xxxxx
+        # auditboard_bearer_token: xxxxx

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+
+pytest=$(which pytest)
+
+
+if [ -z $pytest ]; then
+    printf "pytest not found. are you in a virtual environment with dependencies installed?\n"
+    exit 1
+fi
+
+pytest -xs test/* -v
