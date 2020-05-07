@@ -101,13 +101,19 @@ if __name__ == "__main__":
 
         # make an initial request to some third party endpoint in order to obtain
         # some value, using client/user supplied authentication
-        response = requests.get(
-            srvc.url,
-            headers={
-                "Authorization": os.environ.get("CLIENT_AUTHENTICATION_KEY"),
-                "Content-Type": srvc.content_type,
-            },
-        )
+        try:
+            response = requests.get(
+                srvc.url,
+                headers={
+                    "Authorization": os.environ.get("CLIENT_AUTHENTICATION_KEY"),
+                    "Content-Type": srvc.content_type,
+                },
+            )
+        # pylint: disable=broad-except
+        except Exception as err:
+            logger.error("endpoint at %s is down: %s", srvc.url, str(err))
+            time.sleep(5)
+            continue
 
         if not response.status_code == 200:
             logger.warning(
@@ -129,19 +135,25 @@ if __name__ == "__main__":
         # value, with the value having an associated KRI (id) and the user/client
         # having an associated bearer token from the swagger documentation branch
         ab_url = f"http://localhost:9001/api/v1/key_risk_indicators/{srvc.kri_id}"
-        response = requests.put(
-            ab_url,
-            headers={
-                "Authorization": f"Bearer {os.environ.get('AUDITBOARD_BEARER_TOKEN')}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "key_risk_indicator": {
-                    "id": srvc.kri_id,
-                    "current_value": payload["value"],
-                }
-            },
-        )
+        try:
+            response = requests.put(
+                ab_url,
+                headers={
+                    "Authorization": f"Bearer {os.environ.get('AUDITBOARD_BEARER_TOKEN')}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "key_risk_indicator": {
+                        "id": srvc.kri_id,
+                        "current_value": payload["value"],
+                    }
+                },
+            )
+        # pylint: disable=broad-except
+        except Exception as err:
+            logger.error("endpoint at %s is down: %s", ab_url, str(err))
+            time.sleep(5)
+            continue
 
         if not response.status_code == 200:
             logger.warning(
