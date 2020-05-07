@@ -104,7 +104,7 @@ if __name__ == "__main__":
         response = requests.get(
             srvc.url,
             headers={
-                "Authorization": os.environ["CLIENT_AUTHENTICATION_KEY"],
+                "Authorization": os.environ.get("CLIENT_AUTHENTICATION_KEY"),
                 "Content-Type": srvc.content_type,
             },
         )
@@ -123,7 +123,7 @@ if __name__ == "__main__":
         # extract the value used to update the KRI from the response (this ideally
         # also should be able to be configured by the client/user)
         response_json = response.json()
-        payload = {"value": response_json["ops_audits_inactive_count"]}
+        payload = {"value": response_json.get("ops_audits_inactive_count")}
 
         # now make an update request to the auditboard api using this newly extracted
         # value, with the value having an associated KRI (id) and the user/client
@@ -132,7 +132,7 @@ if __name__ == "__main__":
         response = requests.put(
             ab_url,
             headers={
-                "Authorization": f"Bearer {os.environ['AUDITBOARD_BEARER_TOKEN']}",
+                "Authorization": f"Bearer {os.environ.get('AUDITBOARD_BEARER_TOKEN')}",
                 "Content-Type": "application/json",
             },
             json={
