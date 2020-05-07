@@ -21,7 +21,7 @@ source ./venv/bin/activate
 
 ## Requirments
 ```bash
-# for all requirements
+# for all requirements (in requirements folder)
 (venv) pip install --upgrade -r requirements.txt -r dev-requirements.txt -r test-requirements.txt --trusted-host pypi.python.org
 ```
 
